@@ -1,0 +1,127 @@
+{
+ "name": "Backup290125-SD-1",
+ "nodes": [
+   {
+     "parameters": {
+       "command": "mkdir -p backup && sqlite3 ~/.n8n/database.sqlite .dump > backup/n8n_backup.sql"
+     },
+     "name": "Backup SQLite Database",
+     "type": "n8n-nodes-base.executeCommand",
+     "typeVersion": 1,
+     "position": [
+       -300,
+       -200
+     ],
+     "id": "5c765d6f-c95f-4015-a596-371a4ebcb6cb"
+   },
+   {
+     "parameters": {
+       "resource": "repository",
+       "operation": "getPullRequests",
+       "owner": {
+         "__rl": true,
+         "value": "martingilberto",
+         "mode": ""
+       },
+       "repository": {
+         "__rl": true,
+         "value": "backup-n8n",
+         "mode": ""
+       },
+       "getRepositoryPullRequestsFilters": {}
+     },
+     "name": "Push to GitHub",
+     "type": "n8n-nodes-base.github",
+     "typeVersion": 1,
+     "position": [
+       -100,
+       -200
+     ],
+     "id": "f7c1cb94-462e-4a7c-b6cb-78638e559548",
+     "credentials": {
+       "githubApi": {
+         "id": "ly0TkBJNHnpFbAte",
+         "name": "GitHub account 2"
+       }
+     }
+   },
+   {
+     "parameters": {},
+     "type": "n8n-nodes-base.manualTrigger",
+     "typeVersion": 1,
+     "position": [
+       -560,
+       -300
+     ],
+     "id": "c000da3d-235e-4142-919b-baff80283df3",
+     "name": "When clicking "
+   },
+   {
+     "parameters": {
+       "rule": {
+         "interval": [
+           {
+             "field": "months",
+             "triggerAtHour": 3
+           }
+         ]
+       }
+     },
+     "type": "n8n-nodes-base.scheduleTrigger",
+     "typeVersion": 1.2,
+     "position": [
+       -560,
+       -60
+     ],
+     "id": "a5a166e7-8f61-4589-9fde-84b7c78868d2",
+     "name": "Schedule Trigger"
+   }
+ ],
+ "pinData": {},
+ "connections": {
+   "Backup SQLite Database": {
+     "main": [
+       [
+         {
+           "node": "Push to GitHub",
+           "type": "main",
+           "index": 0
+         }
+       ]
+     ]
+   },
+   "When clicking ": {
+     "main": [
+       [
+         {
+           "node": "Backup SQLite Database",
+           "type": "main",
+           "index": 0
+         }
+       ]
+     ]
+   },
+   "Schedule Trigger": {
+     "main": [
+       [
+         {
+           "node": "Backup SQLite Database",
+           "type": "main",
+           "index": 0
+         }
+       ]
+     ]
+   }
+ },
+ "active": false,
+ "settings": {
+   "executionOrder": "v1"
+ },
+ "versionId": "0b569355-3bc1-42fa-a05f-8de44534d61c",
+ "meta": {
+   "templateCredsSetupCompleted": true,
+   "instanceId": "a832cc32142c0a82de397a2eb267580fdacecb5bcc069f65f0b0ad451856516c"
+ },
+ "id": "u7J7dJLSRQ49DBn6",
+ "tags": []
+}
